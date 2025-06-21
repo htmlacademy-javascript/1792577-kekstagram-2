@@ -174,5 +174,5 @@ function generatePostsArray(count) {
   return posts;
 }
 
-// generatePostsArray(25);
+generatePostsArray(25);
 
