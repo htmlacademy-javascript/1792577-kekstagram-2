@@ -12,7 +12,7 @@ export function createPost() {
   return {
     id: id(),
     url: `photos/${idPhoto()}.jpg`,
-    description,
+    description: description,
     likes: like,
     comments: generateCommentsArray()
   };

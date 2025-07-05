@@ -1,3 +1,3 @@
-import { generatePostsArray } from './posts.js';
+import { renderPictures } from './picture.js';
 
-generatePostsArray(25);
+renderPictures();
