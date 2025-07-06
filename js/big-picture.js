@@ -8,23 +8,23 @@ const bigPictureShownCount = bigPicture.querySelector('.social__comment-shown-co
 const bigPictureTotalCount = bigPicture.querySelector('.social__comment-total-count');
 const bigPictureSocialCaption = bigPicture.querySelector('.social__caption');
 const bigPictureButtonClose = bigPicture.querySelector('.big-picture__cancel');
-const commentCount = document.querySelector('.social__comment-count');
-const loader = document.querySelector('.comments-loader');
 const commentsContainer = bigPicture.querySelector('.social__comments');
-
+const loader = document.querySelector('.comments-loader');
+const MAX_RENDER_COMMENTS = 5;
+let allComments = [];
+let shownCommentsCount = 0;
 
 // Обновляет количество показанных комментариев
-
 function updateShownCommentsCount() {
-  const shownCommentsCount = commentsContainer.querySelectorAll('.social__comment').length;
   bigPictureShownCount.textContent = shownCommentsCount;
 }
 
+function renderNextComments() {
+  const nextCount = Math.min(shownCommentsCount + MAX_RENDER_COMMENTS, allComments.length);
+  const commentsToShow = allComments.slice(shownCommentsCount, nextCount);
 
-function renderComments(comments) {
-  commentsContainer.innerHTML = '';
-
-  comments.forEach((comment) => {
+  // Добавляем новые комментарии в контейнер, не очищая его
+  commentsToShow.forEach((comment) => {
     const li = document.createElement('li');
     li.classList.add('social__comment');
 
@@ -36,16 +36,30 @@ function renderComments(comments) {
     commentsContainer.appendChild(li);
   });
 
+  shownCommentsCount = nextCount;
   updateShownCommentsCount();
+
+  // Обновляем видимость кнопки "Загрузить ещё"
+  if (shownCommentsCount >= allComments.length) {
+    loader.classList.add('hidden');
+  } else {
+    loader.classList.remove('hidden');
+  }
 }
 
+// Функция инициализации загрузки комментариев при открытии окна
+function initComments(comments) {
+  allComments = comments;
+  shownCommentsCount = 0;
+  commentsContainer.innerHTML = '';
+  renderNextComments();
+}
+
+// Обработчик кнопки "Загрузить ещё"
+loader.addEventListener('click', renderNextComments);
+
 // Открывает модальное окно с полноразмерным изображением и данными
-
 export function openModal(post) {
-  // Скрываем блоки счётчика комментариев и загрузки
-  commentCount.classList.add('hidden');
-  loader.classList.add('hidden');
-
   // Добавляем класс modal-open к body, чтобы запретить прокрутку страницы
   body.classList.add('modal-open');
 
@@ -60,29 +74,22 @@ export function openModal(post) {
   bigPictureSocialCaption.textContent = post.description;
 
   // Рендерим комментарии из объекта post
-  renderComments(post.comments);
+  initComments(post.comments);
 
   // Добавляем обработчик клавиши Esc для закрытия модалки
   document.addEventListener('keydown', onDocumentKeydown);
 }
 
-//Закрывает модальное окно и очищает обработчики
-
+// Закрывает модальное окно и очищает обработчики
 export function closeModal() {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
-
-  // Восстанавливаем видимость блоков счётчика и загрузки (если нужно)
-  commentCount.classList.remove('hidden');
-  loader.classList.remove('hidden');
 
   // Удаляем обработчик клавиши Esc
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-
 // Обработчик нажатия клавиши
-
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
