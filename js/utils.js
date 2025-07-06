@@ -52,3 +52,9 @@ export function getRandomOneOrTwo(array) {
   }
   return result.join(' ');
 }
+
+// Проверка нажатой клавиши
+
+export function isEscapeKey(event) {
+  return event.code === 'Escape';
+}
