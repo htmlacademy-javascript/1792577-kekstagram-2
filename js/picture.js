@@ -1,13 +1,14 @@
 import { generatePostsArray } from './posts.js';
+import { openModal } from './big-picture.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
 export function renderPictures() {
-  const createPicturePost = generatePostsArray(25);
+  const pictureArray = generatePostsArray(25);
   const picturesFragment = document.createDocumentFragment();
 
-  createPicturePost.forEach((post) => {
+  pictureArray.forEach((post) => {
     const picturePost = pictureTemplate.cloneNode(true);
 
     picturePost.querySelector('.picture__img').src = post.url;
@@ -15,6 +16,11 @@ export function renderPictures() {
     picturePost.querySelector('.picture__comments').textContent = post.comments.length;
     picturePost.querySelector('.picture__likes').textContent = post.likes;
 
+
+    picturePost.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openModal(post);
+    });
 
     picturesFragment.appendChild(picturePost);
   });
