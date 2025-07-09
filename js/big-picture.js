@@ -1,6 +1,5 @@
-import { isEscapeKey } from './utils.js';
+import { openModal, closeModal, setEscClose, setOverlayClose } from './utils.js';
 
-const body = document.body;
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
 const bigPictureLike = bigPicture.querySelector('.likes-count');
@@ -59,13 +58,15 @@ function initComments(comments) {
 loader.addEventListener('click', renderNextComments);
 
 // Открывает модальное окно с полноразмерным изображением и данными
-export function openModal(post) {
+export function openPicture(post) {
   // Добавляем класс modal-open к body, чтобы запретить прокрутку страницы
-  body.classList.add('modal-open');
+
+  //setModalOpen(true);
 
   // Показываем модальное окно
-  bigPicture.classList.remove('hidden');
+  //bigPicture.classList.remove('hidden');
 
+  openModal(bigPicture);
   // Заполняем данные
   bigPictureImg.src = post.url;
   bigPictureImg.alt = post.description;
@@ -77,32 +78,41 @@ export function openModal(post) {
   initComments(post.comments);
 
   // Добавляем обработчик клавиши Esc для закрытия модалки
-  document.addEventListener('keydown', onDocumentKeydown);
+  //document.addEventListener('keydown', onDocumentKeydown);
 }
 
 // Закрывает модальное окно и очищает обработчики
-export function closeModal() {
-  bigPicture.classList.add('hidden');
-  body.classList.remove('modal-open');
+export function closePicture() {
+  //setModalOpen(false);
+  //bigPicture.classList.add('hidden');
+  closeModal(bigPicture);
 
   // Удаляем обработчик клавиши Esc
-  document.removeEventListener('keydown', onDocumentKeydown);
+  //document.removeEventListener('keydown', onDocumentKeydown);
 }
 
 // Обработчик нажатия клавиши
-function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeModal();
-  }
-}
+// function onDocumentKeydown(evt) {
+//   if (isEscapeKey(evt)) {
+//     evt.preventDefault();
+//     closePicture();
+//   }
+//}
+
 
 // Обработчик клика по кнопке закрытия
-bigPictureButtonClose.addEventListener('click', closeModal);
+bigPictureButtonClose.addEventListener('click', closePicture);
 
 // Обработчик клика по оверлею (закрытие при клике вне контента)
 bigPicture.addEventListener('click', (evt) => {
   if (evt.target === bigPicture) {
-    closeModal();
+    closePicture();
   }
 });
+
+
+setEscClose(bigPicture, closePicture);
+
+setOverlayClose(bigPicture, closePicture);
+
+
