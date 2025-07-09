@@ -1,4 +1,26 @@
+// Функция работы с body
+
+export function setModalOpen(isOpen) {
+  document.body.classList.toggle('modal-open', isOpen);
+}
+
+// Открытие модал
+
+export function openModal(modalElement) {
+  modalElement.classList.remove('hidden');
+  setModalOpen(true);
+}
+
+// Закрытие модал
+
+export function closeModal(modalElement) {
+  modalElement.classList.add('hidden');
+  setModalOpen(false);
+}
+
+
 // Функция для создания рандомного числа
+
 export function getRandomInteger(min, max) {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
@@ -7,6 +29,7 @@ export function getRandomInteger(min, max) {
 }
 
 // Функция создающая уникальное число в указанном диапазоне
+
 export function createNumberGenerator(min, max) {
   let currentId = min - 1;
 
@@ -20,12 +43,14 @@ export function createNumberGenerator(min, max) {
 }
 
 // Функция получающая рандомный элемент из массива
+
 export function getRandomElement(array) {
   const randomIndex = getRandomInteger(0, array.length - 1);
   return array[randomIndex];
 }
 
 // Функция генерирующая рандомные числа без диапазона
+
 const usedIds = new Set();
 
 export function generateUniqueRandomId() {
@@ -57,4 +82,36 @@ export function getRandomOneOrTwo(array) {
 
 export function isEscapeKey(event) {
   return event.code === 'Escape';
+}
+
+// Закрытие по ESC
+export function setEscClose(modalElement, closeCallback, inputSelectors = []) {
+  function onEsc(evt) {
+    const active = document.activeElement;
+    // Если фокус в одном из полей ввода — не закрываем
+    if (
+      evt.key === 'Escape' &&
+      !modalElement.classList.contains('hidden') &&
+      !inputSelectors.some((sel) => active && active.matches(sel))
+    ) {
+      evt.preventDefault();
+      closeCallback();
+    }
+  }
+  document.addEventListener('keydown', onEsc);
+  return () => document.removeEventListener('keydown', onEsc);
+}
+
+// Закрытие оверлейн
+
+export function setOverlayClose(modalElement, closeCallback) {
+  function onOverlayClick(evt) {
+    if (evt.target === modalElement) {
+      closeCallback();
+    }
+  }
+  modalElement.addEventListener('click', onOverlayClick);
+
+  // Возвращаем функцию для удаления обработчика, если потребуется
+  return () => modalElement.removeEventListener('click', onOverlayClick);
 }
