@@ -1,18 +1,15 @@
 // Функция работы с body
-
 export function setModalOpen(isOpen) {
   document.body.classList.toggle('modal-open', isOpen);
 }
 
 // Открытие модал
-
 export function openModal(modalElement) {
   modalElement.classList.remove('hidden');
   setModalOpen(true);
 }
 
 // Закрытие модал
-
 export function closeModal(modalElement) {
   modalElement.classList.add('hidden');
   setModalOpen(false);
@@ -20,7 +17,6 @@ export function closeModal(modalElement) {
 
 
 // Функция для создания рандомного числа
-
 export function getRandomInteger(min, max) {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
@@ -29,7 +25,6 @@ export function getRandomInteger(min, max) {
 }
 
 // Функция создающая уникальное число в указанном диапазоне
-
 export function createNumberGenerator(min, max) {
   let currentId = min - 1;
 
@@ -43,14 +38,12 @@ export function createNumberGenerator(min, max) {
 }
 
 // Функция получающая рандомный элемент из массива
-
 export function getRandomElement(array) {
   const randomIndex = getRandomInteger(0, array.length - 1);
   return array[randomIndex];
 }
 
 // Функция генерирующая рандомные числа без диапазона
-
 const usedIds = new Set();
 
 export function generateUniqueRandomId() {
@@ -79,7 +72,6 @@ export function getRandomOneOrTwo(array) {
 }
 
 // Проверка нажатой клавиши
-
 export function isEscapeKey(event) {
   return event.code === 'Escape';
 }
@@ -88,6 +80,7 @@ export function isEscapeKey(event) {
 export function setEscClose(modalElement, closeCallback, inputSelectors = []) {
   function onEsc(evt) {
     const active = document.activeElement;
+
     // Если фокус в одном из полей ввода — не закрываем
     if (
       evt.key === 'Escape' &&
@@ -103,7 +96,6 @@ export function setEscClose(modalElement, closeCallback, inputSelectors = []) {
 }
 
 // Закрытие оверлейн
-
 export function setOverlayClose(modalElement, closeCallback) {
   function onOverlayClick(evt) {
     if (evt.target === modalElement) {

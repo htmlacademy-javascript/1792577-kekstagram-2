@@ -27,15 +27,12 @@ function closeEditForm() {
 }
 
 // Закрытие формы
-
 buttonImgCancel.addEventListener('click', (evt) => {
   evt.preventDefault();
   closeEditForm();
 });
 
-
-// setEscClose(imgOverlay, closeEditForm);
-
 setOverlayClose(imgOverlay, closeEditForm);
 
 setEscClose(imgOverlay, closeEditForm, ['.text__hashtags', '.text__description']);
+setOverlayClose(imgOverlay, closeEditForm, ['.text__hashtags', '.text__description']);
