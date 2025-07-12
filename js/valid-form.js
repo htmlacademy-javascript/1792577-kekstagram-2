@@ -2,7 +2,7 @@ const imageFormUser = document.querySelector('.img-upload__form');
 const hashtagsInput = imageFormUser.querySelector('.text__hashtags');
 const descriptionInput = imageFormUser.querySelector('.text__description');
 const fileInput = imageFormUser.querySelector('.img-upload__input');
-const scaleInput = imageFormUser.querySelector('.scale__control--value');
+
 
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 let errorMessage = '';
@@ -75,10 +75,6 @@ descriptionInput.addEventListener('input', () => {
 
 // Сброс формы при закрытии
 export function resetFormState() {
-  // Сброс масштаба
-  if (scaleInput) {
-    scaleInput.value = '100%';
-  }
   // Сброс эффекта
   const effectNone = imageFormUser.querySelector('#effect-none');
   if (effectNone) {

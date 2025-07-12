@@ -14,6 +14,7 @@ let allComments = [];
 let shownCommentsCount = 0;
 
 // Обновляет количество показанных комментариев
+
 function updateShownCommentsCount() {
   bigPictureShownCount.textContent = shownCommentsCount;
 }
@@ -22,7 +23,8 @@ function renderNextComments() {
   const nextCount = Math.min(shownCommentsCount + MAX_RENDER_COMMENTS, allComments.length);
   const commentsToShow = allComments.slice(shownCommentsCount, nextCount);
 
-  // Добавляем новые комментарии в контейнер, не очищая его
+  // Добавляем новые комментарии в контейнер
+
   commentsToShow.forEach((comment) => {
     const li = document.createElement('li');
     li.classList.add('social__comment');
@@ -39,6 +41,7 @@ function renderNextComments() {
   updateShownCommentsCount();
 
   // Обновляем видимость кнопки "Загрузить ещё"
+
   if (shownCommentsCount >= allComments.length) {
     loader.classList.add('hidden');
   } else {
@@ -47,6 +50,7 @@ function renderNextComments() {
 }
 
 // Функция инициализации загрузки комментариев при открытии окна
+
 function initComments(comments) {
   allComments = comments;
   shownCommentsCount = 0;
@@ -55,19 +59,16 @@ function initComments(comments) {
 }
 
 // Обработчик кнопки "Загрузить ещё"
+
 loader.addEventListener('click', renderNextComments);
 
 // Открывает модальное окно с полноразмерным изображением и данными
+
 export function openPicture(post) {
-  // Добавляем класс modal-open к body, чтобы запретить прокрутку страницы
-
-  //setModalOpen(true);
-
-  // Показываем модальное окно
-  //bigPicture.classList.remove('hidden');
-
   openModal(bigPicture);
+
   // Заполняем данные
+
   bigPictureImg.src = post.url;
   bigPictureImg.alt = post.description;
   bigPictureLike.textContent = post.likes;
@@ -75,44 +76,28 @@ export function openPicture(post) {
   bigPictureSocialCaption.textContent = post.description;
 
   // Рендерим комментарии из объекта post
-  initComments(post.comments);
 
-  // Добавляем обработчик клавиши Esc для закрытия модалки
-  //document.addEventListener('keydown', onDocumentKeydown);
+  initComments(post.comments);
 }
 
 // Закрывает модальное окно и очищает обработчики
-export function closePicture() {
-  //setModalOpen(false);
-  //bigPicture.classList.add('hidden');
-  closeModal(bigPicture);
 
-  // Удаляем обработчик клавиши Esc
-  //document.removeEventListener('keydown', onDocumentKeydown);
+export function closePicture() {
+  closeModal(bigPicture);
 }
 
-// Обработчик нажатия клавиши
-// function onDocumentKeydown(evt) {
-//   if (isEscapeKey(evt)) {
-//     evt.preventDefault();
-//     closePicture();
-//   }
-//}
-
-
 // Обработчик клика по кнопке закрытия
+
 bigPictureButtonClose.addEventListener('click', closePicture);
 
 // Обработчик клика по оверлею (закрытие при клике вне контента)
+
 bigPicture.addEventListener('click', (evt) => {
   if (evt.target === bigPicture) {
     closePicture();
   }
 });
 
-
 setEscClose(bigPicture, closePicture);
 
 setOverlayClose(bigPicture, closePicture);
-
-
