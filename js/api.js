@@ -1,5 +1,6 @@
 import { renderPictures } from './picture.js';
 import { showDataErrorMessage } from './utils.js';
+import { showFilter, setPhotosForFilter } from './filter.js';
 
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
 const Route = {
@@ -7,12 +8,15 @@ const Route = {
   SEND_DATA: '/',
 };
 
+
 //Загрузка данных с сервера
 export function getData() {
   fetch(`${BASE_URL}${Route.GET_DATA}`)
     .then((response) => response.json())
     .then((pictures) => {
       renderPictures(pictures);
+      setPhotosForFilter(pictures);
+      showFilter();
     })
     .catch(() => {
       showDataErrorMessage();

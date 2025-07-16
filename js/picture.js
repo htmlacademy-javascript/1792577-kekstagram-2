@@ -4,6 +4,8 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 const picturesContainer = document.querySelector('.pictures');
 
 export function renderPictures(pictureArray) {
+  picturesContainer.querySelectorAll('.picture').forEach((el) => el.remove());
+
   const picturesFragment = document.createDocumentFragment();
 
   pictureArray.forEach((post) => {
