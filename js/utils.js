@@ -107,3 +107,19 @@ export function setOverlayClose(modalElement, closeCallback) {
   // Возвращаем функцию для удаления обработчика, если потребуется
   return () => modalElement.removeEventListener('click', onOverlayClick);
 }
+
+// Ошибка запроса
+export function showDataErrorMessage() {
+  const template = document.querySelector('#data-error');
+  if (template) {
+    const errorElement = template.content.cloneNode(true);
+    document.body.appendChild(errorElement);
+
+    setTimeout(() => {
+      const errorMessage = document.querySelector('.data-error');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, 5000);
+  }
+}

@@ -8,7 +8,6 @@ function correct(string) {
 
 correct();
 
-
 function palindrome(string) {
   const cleaned = string.toLowerCase().replace(/[^a-z0-9а-яё]/gi, '');
   const reversed = cleaned.split('').reverse().join('');

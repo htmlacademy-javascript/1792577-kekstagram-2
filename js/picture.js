@@ -1,11 +1,9 @@
-import { generatePostsArray } from './posts.js';
 import { openPicture } from './big-picture.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
-export function renderPictures() {
-  const pictureArray = generatePostsArray(25);
+export function renderPictures(pictureArray) {
   const picturesFragment = document.createDocumentFragment();
 
   pictureArray.forEach((post) => {
@@ -15,7 +13,6 @@ export function renderPictures() {
     picturePost.querySelector('.picture__img').alt = post.description;
     picturePost.querySelector('.picture__comments').textContent = post.comments.length;
     picturePost.querySelector('.picture__likes').textContent = post.likes;
-
 
     picturePost.addEventListener('click', (evt) => {
       evt.preventDefault();
