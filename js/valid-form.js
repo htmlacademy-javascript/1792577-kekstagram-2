@@ -1,7 +1,11 @@
+import { closeEditForm } from './form.js';
+import { sendData } from './api.js';
+
 const imageFormUser = document.querySelector('.img-upload__form');
 const hashtagsInput = imageFormUser.querySelector('.text__hashtags');
 const descriptionInput = imageFormUser.querySelector('.text__description');
 const fileInput = imageFormUser.querySelector('.img-upload__input');
+const submitButton = imageFormUser.querySelector('button[type="submit"]');
 
 
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -16,7 +20,7 @@ const pristine = new Pristine(imageFormUser, {
 });
 
 // Валидация хэштегов
-function validHashtag(value) {
+export function validHashtag(value) {
   if (!value.trim()) {
     return true;
   }
@@ -43,8 +47,8 @@ function validHashtag(value) {
       errorMessage = 'Не может содержать спецсимволы #, @, $';
       return false;
     }
-
   }
+
   const lowerCaseTags = hashtags.map((tag) => tag.toLowerCase());
   const uniqueTags = new Set(lowerCaseTags);
   if (uniqueTags.size !== hashtags.length) {
@@ -53,25 +57,29 @@ function validHashtag(value) {
   }
   return true;
 }
+
 pristine.addValidator(hashtagsInput, validHashtag, () => errorMessage);
 
 // Валидация комментария
 function validateDescription(value) {
   return value.length <= 140;
 }
+
 pristine.addValidator(
   descriptionInput,
   validateDescription,
   'Комментарий не может быть длиннее 140 символов'
 );
 
-// Валидация на лету
-hashtagsInput.addEventListener('input', () => {
-  pristine.validate(hashtagsInput);
-});
-descriptionInput.addEventListener('input', () => {
-  pristine.validate(descriptionInput);
-});
+function updateSubmitButtonState() {
+  submitButton.disabled = !pristine.validate();
+}
+
+hashtagsInput.addEventListener('input', updateSubmitButtonState);
+descriptionInput.addEventListener('input', updateSubmitButtonState);
+fileInput.addEventListener('input', updateSubmitButtonState);
+
+updateSubmitButtonState();
 
 // Сброс формы при закрытии
 export function resetFormState() {
@@ -83,22 +91,22 @@ export function resetFormState() {
   // Очистка полей
   hashtagsInput.value = '';
   descriptionInput.value = '';
-  // Очистка input file
   if (fileInput) {
     fileInput.value = '';
   }
-}
-
-// Закрытие формы (пример, если используете отдельный модуль для открытия/закрытия)
-export function closeEditForm() {
-  // Здесь ваш код для скрытия модалки, например:
-  // closeModal(imgOverlay);
-  resetFormState();
+  pristine.reset();
+  updateSubmitButtonState();
 }
 
 // Блокировка отправки при ошибках
-imageFormUser.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
+function setUserFormSubmit(onSuccess) {
+  imageFormUser.addEventListener('submit', (evt) => {
     evt.preventDefault();
-  }
-});
+    if (pristine.validate()) {
+      const formData = new FormData(evt.target);
+      sendData(formData, onSuccess);
+    }
+  });
+}
+setUserFormSubmit(closeEditForm);
+

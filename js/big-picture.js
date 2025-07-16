@@ -82,7 +82,7 @@ export function openPicture(post) {
 
 // Закрывает модальное окно и очищает обработчики
 
-export function closePicture() {
+function closePicture() {
   closeModal(bigPicture);
 }
 

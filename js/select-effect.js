@@ -57,13 +57,17 @@ const EFFECTS = {
 
 let currentEffect = EFFECTS.none;
 
-// Функция для скрытия слайдера при открытии
+function resetEffect() {
 
-function initEffect() {
-  currentEffect = EFFECTS.none;
   effectLevel.style.display = 'none';
   imgPreview.style.filter = '';
   valueLevel.value = '';
+}
+
+// Функция для скрытия слайдера при открытии
+function initEffect() {
+  currentEffect = EFFECTS.none;
+  resetEffect();
 
   sliderLevel.noUiSlider.updateOptions({
     range: {
@@ -75,7 +79,6 @@ function initEffect() {
   });
 }
 // Создание слайдера
-
 noUiSlider.create(sliderLevel, {
   range: {
     min: EFFECTS.none.range[0],
@@ -87,15 +90,13 @@ noUiSlider.create(sliderLevel, {
 });
 
 // Обработчик изменения значения слайдера
-
 sliderLevel.noUiSlider.on('update', (values) => {
   const value = values[0];
   valueLevel.value = value;
   imgPreview.style.filter = currentEffect.filter(value);
 });
 
-// Обработчик выбора эффекта - обновляет параметры слайдера и применяет фильтр к изображению
-
+// Обработчик выбора эффекта
 effectsList.addEventListener('change', (evt) => {
   const effectKey = evt.target.value;
   currentEffect = EFFECTS[effectKey];
@@ -112,9 +113,7 @@ effectsList.addEventListener('change', (evt) => {
     });
 
   } else {
-    effectLevel.style.display = 'none';
-    imgPreview.style.filter = '';
-    valueLevel.value = '';
+    resetEffect();
 
     imgPreview.style.filter = currentEffect.filter(currentEffect.start);
     valueLevel.value = currentEffect.start;
