@@ -1,5 +1,6 @@
 import { closeEditForm } from './form.js';
 import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './utils.js';
 
 const imageFormUser = document.querySelector('.img-upload__form');
 const hashtagsInput = imageFormUser.querySelector('.text__hashtags');
@@ -99,14 +100,17 @@ export function resetFormState() {
 }
 
 // Блокировка отправки при ошибках
-function setUserFormSubmit(onSuccess) {
+function setUserFormSubmit() {
   imageFormUser.addEventListener('submit', (evt) => {
     evt.preventDefault();
     if (pristine.validate()) {
       const formData = new FormData(evt.target);
-      sendData(formData, onSuccess);
+      sendData(formData, () => {
+        closeEditForm();
+        showSuccessMessage();
+      }, showErrorMessage);
     }
   });
 }
-setUserFormSubmit(closeEditForm);
+setUserFormSubmit();
 

@@ -131,3 +131,47 @@ export function debounce(callback, timeoutDelay = 500) {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 }
+
+
+export function showSuccessMessage() {
+  const template = document.querySelector('#success');
+  if (template) {
+    const successElement = template.content.cloneNode(true);
+    document.body.insertBefore(successElement, null);
+
+    const button = document.querySelector('.success__button');
+    const section = document.querySelector('.success');
+
+    const removeSuccess = () => {
+      if (section) {
+        section.remove();
+      }
+    };
+    setEscClose(section, removeSuccess);
+    setOverlayClose(section, removeSuccess);
+
+    button.addEventListener('click', removeSuccess);
+  }
+}
+
+export function showErrorMessage() {
+  const template = document.querySelector('#error');
+  if (template) {
+    const errorElement = template.content.cloneNode(true);
+    document.body.insertBefore(errorElement, null);
+
+    const button = document.querySelector('.error__button');
+    const section = document.querySelector('.error');
+
+    const removeError = () => {
+      if (section) {
+        section.remove();
+      }
+    };
+    setEscClose(section, removeError);
+    setOverlayClose(section, removeError);
+
+    button.addEventListener('click', removeError);
+  }
+}
+
