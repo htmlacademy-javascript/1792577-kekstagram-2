@@ -7,7 +7,7 @@ const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_DEFAULT = 100;
 
-function setScale(value) {
+export function setScale(value) {
   scaleValue.value = `${value}%`;
   if (imgPreview) {
     imgPreview.style.transform = `scale(${value / 100})`;

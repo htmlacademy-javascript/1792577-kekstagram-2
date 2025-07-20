@@ -24,7 +24,7 @@ export function getData() {
 }
 
 //Отправка данных на сервер
-export function sendData(formData, onSuccess) {
+export function sendData(formData, onSuccess, onError) {
   fetch(
     `${BASE_URL}${Route.SEND_DATA}`,
     {
@@ -36,10 +36,14 @@ export function sendData(formData, onSuccess) {
       if (response.ok) {
         onSuccess();
       } else {
-        showDataErrorMessage();
+        if (onError) {
+          onError();
+        }
       }
     })
     .catch(() => {
-      showDataErrorMessage();
+      if (onError) {
+        onError();
+      }
     });
 }

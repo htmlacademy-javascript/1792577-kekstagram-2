@@ -1,6 +1,7 @@
-import { openModal, closeModal, setEscClose, setOverlayClose } from './utils.js';
-import './valid-form.js';
+import { openModal, closeModal, setEscClose, setOverlayClose, } from './utils.js';
+import { resetFormState } from './valid-form.js';
 import './select-effect.js';
+import './scale-control.js';
 
 const imgUpload = document.querySelector('.img-upload__input');
 const imgOverlay = document.querySelector('.img-upload__overlay');
@@ -28,6 +29,7 @@ export function initOpenForm() {
 export function closeEditForm() {
   closeModal(imgOverlay);
   imgUpload.value = '';
+  resetFormState();
 }
 
 // Закрытие формы
