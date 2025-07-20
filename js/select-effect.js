@@ -92,12 +92,13 @@ noUiSlider.create(sliderLevel, {
 // Обработчик изменения значения слайдера
 sliderLevel.noUiSlider.on('update', (values) => {
   const value = values[0];
-  valueLevel.value = value;
+  valueLevel.value = parseFloat(value).toString();
   imgPreview.style.filter = currentEffect.filter(value);
 });
 
 // Обработчик выбора эффекта
 effectsList.addEventListener('change', (evt) => {
+  resetEffect();
   const effectKey = evt.target.value;
   currentEffect = EFFECTS[effectKey];
 
@@ -113,8 +114,6 @@ effectsList.addEventListener('change', (evt) => {
     });
 
   } else {
-    resetEffect();
-
     imgPreview.style.filter = currentEffect.filter(currentEffect.start);
     valueLevel.value = currentEffect.start;
   }

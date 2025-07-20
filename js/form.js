@@ -32,6 +32,12 @@ export function closeEditForm() {
   resetFormState();
 }
 
+export function openEditForm() {
+  if (imgOverlay) {
+    imgOverlay.classList.remove('hidden');
+  }
+}
+
 // Закрытие формы
 buttonImgCancel.addEventListener('click', (evt) => {
   evt.preventDefault();
@@ -40,5 +46,8 @@ buttonImgCancel.addEventListener('click', (evt) => {
 
 setOverlayClose(imgOverlay, closeEditForm);
 
-setEscClose(imgOverlay, closeEditForm, ['.text__hashtags', '.text__description']);
-setOverlayClose(imgOverlay, closeEditForm, ['.text__hashtags', '.text__description']);
+setEscClose(imgOverlay, () => {
+  if (!document.querySelector('.error')) {
+    closeEditForm();
+  }
+}, ['.text__hashtags', '.text__description']);
