@@ -38,9 +38,9 @@ export function createNumberGenerator(min, max) {
 }
 
 // Функция получающая рандомный элемент из массива
-export function getRandomElement(array) {
-  const randomIndex = getRandomInteger(0, array.length - 1);
-  return array[randomIndex];
+export function getRandomElement(arrays) {
+  const randomIndex = getRandomInteger(0, arrays.length - 1);
+  return arrays[randomIndex];
 }
 
 // Функция генерирующая рандомные числа без диапазона
@@ -57,27 +57,22 @@ export function generateUniqueRandomId() {
 }
 
 // Функция создающая сообщение из 1 или 2 случайных элементов массива
-export function getRandomOneOrTwo(array) {
+export function getRandomOneOrTwo(arrays) {
   const count = getRandomInteger(1, 2);
-  const result = [];
+  const results = [];
   const usedIndices = new Set();
-  while (result.length < count && result.length < array.length) {
-    const randomIndex = Math.floor(Math.random() * array.length);
+  while (results.length < count && results.length < arrays.length) {
+    const randomIndex = Math.floor(Math.random() * arrays.length);
     if (!usedIndices.has(randomIndex)) {
       usedIndices.add(randomIndex);
-      result.push(array[randomIndex]);
+      results.push(arrays[randomIndex]);
     }
   }
-  return result.join(' ');
-}
-
-// Проверка нажатой клавиши
-export function isEscapeKey(event) {
-  return event.code === 'Escape';
+  return results.join(' ');
 }
 
 // Закрытие по ESC
-export function setEscClose(modalElement, closeCallback, inputSelectors = []) {
+export const setEscClose = (modalElement, closeCallback, inputSelectors = []) => {
   function onEsc(evt) {
     const active = document.activeElement;
 
@@ -93,10 +88,10 @@ export function setEscClose(modalElement, closeCallback, inputSelectors = []) {
   }
   document.addEventListener('keydown', onEsc);
   return () => document.removeEventListener('keydown', onEsc);
-}
+};
 
 // Закрытие оверлейн
-export function setOverlayClose(modalElement, closeCallback) {
+export const setOverlayClose = (modalElement, closeCallback) => {
   function onOverlayClick(evt) {
     if (evt.target === modalElement) {
       closeCallback();
@@ -106,10 +101,10 @@ export function setOverlayClose(modalElement, closeCallback) {
 
   // Возвращаем функцию для удаления обработчика, если потребуется
   return () => modalElement.removeEventListener('click', onOverlayClick);
-}
+};
 
 // Ошибка запроса
-export function showDataErrorMessage() {
+export const showDataErrorMessage = () => {
   const template = document.querySelector('#data-error');
   if (template) {
     const errorElement = template.content.cloneNode(true);
@@ -122,18 +117,17 @@ export function showDataErrorMessage() {
       }
     }, 5000);
   }
-}
+};
 
-export function debounce(callback, timeoutDelay = 500) {
+export const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
-
-export function showSuccessMessage() {
+export const showSuccessMessage = () => {
   const template = document.querySelector('#success');
   if (template) {
     const successElement = template.content.cloneNode(true);
@@ -152,9 +146,9 @@ export function showSuccessMessage() {
 
     button.addEventListener('click', removeSuccess);
   }
-}
+};
 
-export function showErrorMessage() {
+export const showErrorMessage = () => {
   const template = document.querySelector('#error');
   if (template) {
     const errorElement = template.content.cloneNode(true);
@@ -173,5 +167,4 @@ export function showErrorMessage() {
 
     button.addEventListener('click', removeError);
   }
-}
-
+};

@@ -10,7 +10,7 @@ const Route = {
 
 
 //Загрузка данных с сервера
-export function getData() {
+export const getData = () => {
   fetch(`${BASE_URL}${Route.GET_DATA}`)
     .then((response) => response.json())
     .then((pictures) => {
@@ -21,10 +21,10 @@ export function getData() {
     .catch(() => {
       showDataErrorMessage();
     });
-}
+};
 
 //Отправка данных на сервер
-export function sendData(formData, onSuccess, onError) {
+export const sendData = (formData, onSuccess, onError) => {
   fetch(
     `${BASE_URL}${Route.SEND_DATA}`,
     {
@@ -46,4 +46,4 @@ export function sendData(formData, onSuccess, onError) {
         onError();
       }
     });
-}
+};

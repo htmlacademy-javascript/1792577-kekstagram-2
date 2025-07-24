@@ -7,7 +7,7 @@ const effectsList = document.querySelector('.effects');
 const EFFECTS = {
   none: {
     filter: () => '',
-    range: [0, 100],
+    ranges: [0, 100],
     start: 100,
     step: 1,
     unit: '',
@@ -15,7 +15,7 @@ const EFFECTS = {
   },
   chrome: {
     filter: (value) => `grayscale(${value})`,
-    range: [0, 1],
+    ranges: [0, 1],
     start: 1,
     step: 0.1,
     unit: '',
@@ -23,7 +23,7 @@ const EFFECTS = {
   },
   sepia: {
     filter: (value) => `sepia(${value})`,
-    range: [0, 1],
+    ranges: [0, 1],
     start: 1,
     step: 0.1,
     unit: '',
@@ -31,7 +31,7 @@ const EFFECTS = {
   },
   marvin: {
     filter: (value) => `invert(${value}%)`,
-    range: [0, 100],
+    ranges: [0, 100],
     start: 100,
     step: 1,
     unit: '%',
@@ -39,7 +39,7 @@ const EFFECTS = {
   },
   phobos: {
     filter: (value) => `blur(${value}px)`,
-    range: [0, 3],
+    ranges: [0, 3],
     start: 3,
     step: 0.1,
     unit: 'px',
@@ -47,7 +47,7 @@ const EFFECTS = {
   },
   heat: {
     filter: (value) => `brightness(${value})`,
-    range: [1, 3],
+    ranges: [1, 3],
     start: 3,
     step: 0.1,
     unit: '',
@@ -57,32 +57,33 @@ const EFFECTS = {
 
 let currentEffect = EFFECTS.none;
 
-function resetEffect() {
+const resetEffect = () => {
 
   effectLevel.style.display = 'none';
   imgPreview.style.filter = '';
   valueLevel.value = '';
-}
+};
 
 // Функция для скрытия слайдера при открытии
-function initEffect() {
+const initEffect = () => {
   currentEffect = EFFECTS.none;
   resetEffect();
 
   sliderLevel.noUiSlider.updateOptions({
     range: {
-      min: currentEffect.range[0],
-      max: currentEffect.range[1]
+      min: currentEffect.ranges[0],
+      max: currentEffect.ranges[1]
     },
     start: currentEffect.start,
     step: currentEffect.step
   });
-}
+};
+
 // Создание слайдера
 noUiSlider.create(sliderLevel, {
   range: {
-    min: EFFECTS.none.range[0],
-    max: EFFECTS.none.range[1]
+    min: EFFECTS.none.ranges[0],
+    max: EFFECTS.none.ranges[1]
   },
   start: EFFECTS.none.start,
   step: EFFECTS.none.step,
@@ -96,8 +97,7 @@ sliderLevel.noUiSlider.on('update', (values) => {
   imgPreview.style.filter = currentEffect.filter(value);
 });
 
-// Обработчик выбора эффекта
-effectsList.addEventListener('change', (evt) => {
+const onEffectsListChange = (evt) => {
   resetEffect();
   const effectKey = evt.target.value;
   currentEffect = EFFECTS[effectKey];
@@ -106,8 +106,8 @@ effectsList.addEventListener('change', (evt) => {
     effectLevel.style.display = '';
     sliderLevel.noUiSlider.updateOptions({
       range: {
-        min: currentEffect.range[0],
-        max: currentEffect.range[1]
+        min: currentEffect.ranges[0],
+        max: currentEffect.ranges[1]
       },
       start: currentEffect.start,
       step: currentEffect.step
@@ -117,6 +117,9 @@ effectsList.addEventListener('change', (evt) => {
     imgPreview.style.filter = currentEffect.filter(currentEffect.start);
     valueLevel.value = currentEffect.start;
   }
-});
+};
 
-initEffect();
+// Обработчик выбора эффекта
+effectsList.addEventListener('change', onEffectsListChange);
+
+export { initEffect };
