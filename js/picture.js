@@ -3,12 +3,12 @@ import { openPicture } from './big-picture.js';
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
-export function renderPictures(pictureArray) {
+export const renderPictures = (pictureArrays) => {
   picturesContainer.querySelectorAll('.picture').forEach((el) => el.remove());
 
   const picturesFragment = document.createDocumentFragment();
 
-  pictureArray.forEach((post) => {
+  pictureArrays.forEach((post) => {
     const picturePost = pictureTemplate.cloneNode(true);
 
     picturePost.querySelector('.picture__img').src = post.url;
@@ -16,13 +16,15 @@ export function renderPictures(pictureArray) {
     picturePost.querySelector('.picture__comments').textContent = post.comments.length;
     picturePost.querySelector('.picture__likes').textContent = post.likes;
 
-    picturePost.addEventListener('click', (evt) => {
+    const onPicturePostClick = (evt) => {
       evt.preventDefault();
       openPicture(post);
-    });
+    };
+
+    picturePost.addEventListener('click', onPicturePostClick);
 
     picturesFragment.appendChild(picturePost);
   });
 
   picturesContainer.appendChild(picturesFragment);
-}
+};

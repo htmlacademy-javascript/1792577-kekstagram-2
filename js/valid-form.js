@@ -1,6 +1,10 @@
 import { closeEditForm } from './form.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './utils.js';
+import { setScale } from './scale-control.js';
+import { initEffect } from './select-effect.js';
+
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const imageFormUser = document.querySelector('.img-upload__form');
 const hashtagsInput = imageFormUser.querySelector('.text__hashtags');
@@ -8,8 +12,6 @@ const descriptionInput = imageFormUser.querySelector('.text__description');
 const fileInput = imageFormUser.querySelector('.img-upload__input');
 const submitButton = imageFormUser.querySelector('button[type="submit"]');
 
-
-const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 let errorMessage = '';
 
 const pristine = new Pristine(imageFormUser, {
@@ -21,9 +23,9 @@ const pristine = new Pristine(imageFormUser, {
 });
 
 // Валидация хэштегов
-export function validHashtag(value) {
+export const validHashtag = (value) => {
   if (!value.trim()) {
-    return true;
+    return true; // если поле пустое — валидация проходит
   }
 
   const hashtags = value.trim().split(/\s+/);
@@ -38,7 +40,8 @@ export function validHashtag(value) {
       return false;
     }
     if (tag === '#') {
-      return true;
+      errorMessage = 'Хештег не может состоять только из одной решётки';
+      return false;
     }
     if (tag.length > 20) {
       errorMessage = 'Хэштег не длинее 20 символов';
@@ -57,14 +60,12 @@ export function validHashtag(value) {
     return false;
   }
   return true;
-}
+};
 
 pristine.addValidator(hashtagsInput, validHashtag, () => errorMessage);
 
 // Валидация комментария
-function validateDescription(value) {
-  return value.length <= 140;
-}
+const validateDescription = (value) => value.length <= 140;
 
 pristine.addValidator(
   descriptionInput,
@@ -72,23 +73,60 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-function updateSubmitButtonState() {
-  submitButton.disabled = !pristine.validate();
-}
+const updateSubmitButtonState = () => {
+  const hashtagsValid = validHashtag(hashtagsInput.value);
+  const descriptionValid = descriptionInput.value.length <= 140;
+  submitButton.disabled = !(hashtagsValid && descriptionValid);
+};
 
-hashtagsInput.addEventListener('input', updateSubmitButtonState);
-descriptionInput.addEventListener('input', updateSubmitButtonState);
+const removeAllPristineErrors = () => {
+  const errorElements = imageFormUser.querySelectorAll('.pristine-error');
+  errorElements.forEach((el) => el.remove());
+};
+
+const onHashtagsInputInput = () => {
+  if (!hashtagsInput.value.trim()) {
+    pristine.reset();
+    removeAllPristineErrors();
+  }
+  updateSubmitButtonState();
+};
+
+const onHashtagsInputChange = () => {
+  if (!hashtagsInput.value.trim()) {
+    pristine.reset();
+    removeAllPristineErrors();
+  }
+  updateSubmitButtonState();
+};
+
+const onDescriptionInputInput = () => {
+  if (!descriptionInput.value.trim()) {
+    pristine.reset();
+    removeAllPristineErrors();
+  }
+  updateSubmitButtonState();
+};
+
+hashtagsInput.addEventListener('input', onHashtagsInputInput);
+hashtagsInput.addEventListener('change', onHashtagsInputChange);
+descriptionInput.addEventListener('input', onDescriptionInputInput);
 fileInput.addEventListener('input', updateSubmitButtonState);
+
+
+hashtagsInput.value = '';
 
 updateSubmitButtonState();
 
 // Сброс формы при закрытии
-export function resetFormState() {
+export const resetFormState = () => {
   // Сброс эффекта
   const effectNone = imageFormUser.querySelector('#effect-none');
   if (effectNone) {
     effectNone.checked = true;
   }
+  initEffect();
+  setScale(100);
   // Очистка полей
   hashtagsInput.value = '';
   descriptionInput.value = '';
@@ -96,21 +134,29 @@ export function resetFormState() {
     fileInput.value = '';
   }
   pristine.reset();
+  removeAllPristineErrors();
   updateSubmitButtonState();
-}
+};
+
+const onImageFormUserSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    submitButton.disabled = true;
+    const formData = new FormData(evt.target);
+    sendData(formData, () => {
+      closeEditForm();
+      showSuccessMessage();
+      submitButton.disabled = false;
+    }, () => {
+      showErrorMessage();
+      submitButton.disabled = false;
+    });
+  }
+};
 
 // Блокировка отправки при ошибках
-function setUserFormSubmit() {
-  imageFormUser.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if (pristine.validate()) {
-      const formData = new FormData(evt.target);
-      sendData(formData, () => {
-        closeEditForm();
-        showSuccessMessage();
-      }, showErrorMessage);
-    }
-  });
-}
+const setUserFormSubmit = () => {
+  imageFormUser.addEventListener('submit', onImageFormUserSubmit);
+};
 setUserFormSubmit();
 

@@ -1,7 +1,7 @@
 import { minCommentNumber, maxCommentNumber, minAvatarPhoto, maxAvatarPhoto, messages, names } from './data.js';
 import { getRandomInteger, getRandomElement, generateUniqueRandomId, getRandomOneOrTwo } from './utils.js';
 
-export function generateCommentsArray() {
+export const generateCommentsArray = () => {
   const commentsCount = getRandomInteger(minCommentNumber, maxCommentNumber);
   const comments = [];
 
@@ -19,4 +19,4 @@ export function generateCommentsArray() {
   }
 
   return comments;
-}
+};
