@@ -25,7 +25,7 @@ const pristine = new Pristine(imageFormUser, {
 // Валидация хэштегов
 export const validHashtag = (value) => {
   if (!value.trim()) {
-    return true; // если поле пустое — валидация проходит
+    return true;
   }
 
   const hashtags = value.trim().split(/\s+/);
